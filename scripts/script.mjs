@@ -42,7 +42,9 @@ class Character {
 	}
 	roll (mod = 0) {
 		const result = Math.floor(Math.random() * 20) + 1 + mod;
-		console.log(`${this.name} rolled a ${result}.`)}
+		console.log(`${this.name} rolled a ${result}.`)
+	}
+	static MAX_HEALTH = 100;		
 }
 
 // // re-create Robin using Character class
@@ -76,6 +78,9 @@ class Adventurer extends Character {
 		super(name);
 		// give adventures a specialized role
 		this.role = role;
+		if (!Adventurer.ROLES.includes(role)) {
+			throw new Error(`Please select one of the following roles: ${Adventurer.ROLES.join(", ")}`);
+		}
 		// start every adventurer off with a sleeping bag and money
 		this.inventory.push("bedroll", "50 gold coins");
 	}
@@ -84,7 +89,8 @@ class Adventurer extends Character {
 		console.log(`${this.name} is scouting ahead...`);
 		super.roll();
 	}
-}
+	static ROLES = ["Fighter", "Healer", "Wizard", "Warrior", "Musician"];
+};
 
 // testing extended character class
 //console.log(robin.inventory);
@@ -114,7 +120,7 @@ robin.companion.companion = new Companion("Frank");
 robin.companion.companion.type = "Flea";
 robin.companion.companion.inventory = ["small hat", "sunglasses"];
 
-const jaki = new Adventurer("Jaki", "Witch");
+const jaki = new Adventurer("Jaki", "Wizard"); // change "Wizard" to "Witch" to test the static property for role!
 jaki.inventory.push("knife", "mace", "potions", "crystals", "journal", "laptop", "paints")
 jaki.companion = new Companion("Shorty the Third");
 jaki.companion.type = "Long-haired Syrian Hamster";
@@ -122,4 +128,6 @@ jaki.companion.inventory = ["sunflower seed", "bowl"];
 
 // PART FOUR--------------------------------------------------
 console.log("Part Four --------------------------------------")
+
+console.log(jaki.role) 
 
