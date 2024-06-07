@@ -43,6 +43,7 @@ class Character {
 	roll (mod = 0) {
 		const result = Math.floor(Math.random() * 20) + 1 + mod;
 		console.log(`${this.name} rolled a ${result}.`)
+		return result;
 	}
 	static MAX_HEALTH = 100;		
 }
@@ -90,6 +91,30 @@ class Adventurer extends Character {
 		super.roll();
 	}
 	static ROLES = ["Fighter", "Healer", "Wizard", "Warrior", "Musician"];
+	// give adventurers the ability to duel
+	duel(opponent) {
+		console.log(`${this.name} is dueling ${opponent.name}!`);
+		while (this.health > 50 && opponent.health > 50) {
+			const rollA = this.roll();
+			const rollB = opponent.roll();
+			if (rollA < rollB) {
+				this.health -= 1;
+				console.log(`${opponent.name} has won this round! ${this.name} has lost a health point.`);
+			} else if (rollA > rollB) {
+				opponent.health -= 1;
+				console.log(`${this.name} has won this round! ${opponent.name} has lost a health point.`)
+			} else {
+				console.log("It's a tie! No one loses health.");
+			}
+			if (this.health > opponent.health) {
+				console.log(`${this.name} wins the duel!`);
+			} else if (this.health < opponent.health) {
+				console.log(`${opponent.name} wins the duel!`);
+			} else {
+				console.log("It's a tie!")
+			}
+		}
+	}
 };
 
 // testing extended character class
@@ -124,10 +149,50 @@ const jaki = new Adventurer("Jaki", "Wizard"); // change "Wizard" to "Witch" to 
 jaki.inventory.push("knife", "mace", "potions", "crystals", "journal", "laptop", "paints")
 jaki.companion = new Companion("Shorty the Third");
 jaki.companion.type = "Long-haired Syrian Hamster";
-jaki.companion.inventory = ["sunflower seed", "bowl"];
+jaki.companion.inventory = ["sunflower seed", "backpack"];
 
 // PART FOUR--------------------------------------------------
 console.log("Part Four --------------------------------------")
 
-console.log(jaki.role) 
+// I incorporatated Part 4's requirements into the code above.
 
+console.log(robin.role);
+
+// PART FIVE--------------------------------------------------
+console.log("Part Five --------------------------------------")
+
+// creating a factory, which is a class that generates objects according to the *factory's* instance properties
+
+class AdventurerFactory {
+	constructor (role) {
+		this.role = role;
+		this.adventurers = [];
+	}
+	generate (name) {
+		const newAdventurer = new Adventurer(name, this.role);
+		this.adventurers.push(newAdventurer);
+		return newAdventurer;
+	}
+	findByIndex (index) {
+		return this.adventurers[index];
+	}
+	findByName (name) {
+		return this.adventurers.find((a) => a.name === name);
+	}
+}
+// set up a factory for creating healers
+const healers = new AdventurerFactory("Healer");
+
+// create a healer using the factory
+const janet = healers.generate("Janet");
+
+// check it out
+console.log(janet);
+
+// create another healer using the factory
+const ron = healers.generate("Ron");
+
+// check it out
+console.log(ron);
+
+ron.duel(janet);
