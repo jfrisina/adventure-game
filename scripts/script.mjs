@@ -196,3 +196,5 @@ const ron = healers.generate("Ron");
 console.log(ron);
 
 ron.duel(janet);
+ron.scout();
+console.log(jaki.companion)
